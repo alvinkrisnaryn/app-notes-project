@@ -1,4 +1,6 @@
-import Api from "./api";
+import Api from "./api.js";
+import "../components/note-item.js";
+import "../components/note-list.js";
 
 const NotesUI = {
   showLoading() {
@@ -18,30 +20,17 @@ const NotesUI = {
       const notes = await Api.getNotes();
       this.hideLoading();
 
+      const notesContainer = document.getElementById("notes-list");
+      notesContainer.innerHTML = "";
+
       if (notes.length === 0) {
-        document.getElementById("notes-list").innerHTML =
-          "<p>📂 Tidak ada catatan.</p>";
+        notesContainer.innerHTML = "<p>📂 Tidak ada catatan.</p>";
         return;
       }
 
-      notes.forEach((note) => {
-        const noteItem = document.createElement("div");
-        noteItem.classList.add("note-item");
-        noteItem.innerHTML = `
-          <h3>${note.title}</h3>
-          <p>${note.body}</p>
-          <button class="delete-btn" data-id="${note.id}">Hapus</button>
-        `;
-        document.getElementById("notes-list").appendChild(noteItem);
-      });
-
-      document.querySelectorAll(".delete-btn").forEach((button) => {
-        button.addEventListener("click", async (event) => {
-          const noteId = event.target.dataset.id;
-          await Api.deleteNote(noteId);
-          await this.renderNotes();
-        });
-      });
+      const noteList = document.createElement("note-list");
+      noteList.notes = notes;
+      notesContainer.appendChild(noteList);
     } catch (error) {
       document.getElementById("notes-list").innerHTML =
         "<p>❌ Gagal memuat catatan.</p>";

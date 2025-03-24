@@ -1,55 +1,48 @@
-import NotesUI from "./utils/domHandler";
-import Api from "./utils/api";
+import NotesUI from "./utils/domHandler.js";
+import Api from "./utils/api.js";
 import "./styles/style.css";
-
+import "./components/note-item.js";
+import "./components/note-list.js";
+import "./components/note-form.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  await NotesUI.renderNotes(); // Memuat catatan saat aplikasi dijalankan
+  await NotesUI.renderNotes();
 });
 
+// Tangani event tambah catatan dari NoteForm
+document.body.addEventListener("add-note", async (event) => {
+  const { title, body } = event.detail;
+
+  if (title && body) {
+    NotesUI.showLoading();
+
+    try {
+      await Api.addNote(title, body);
+      await NotesUI.renderNotes();
+    } catch (error) {
+      console.error("Gagal menambahkan catatan:", error);
+    } finally {
+      NotesUI.hideLoading();
+    }
+  }
+});
+
+// Tangani event hapus catatan dari NoteItem
 document
-  .getElementById("note-form")
-  .addEventListener("submit", async (event) => {
-    event.preventDefault();
+  .getElementById("notes-list")
+  .addEventListener("delete-note", async (event) => {
+    const noteId = event.detail;
 
-    const titleInput = document.getElementById("title");
-    const bodyInput = document.getElementById("body");
-    const title = titleInput.value;
-    const body = bodyInput.value;
-
-    if (title && body) {
+    if (confirm("Apakah Anda yakin ingin menghapus catatan ini?")) {
       NotesUI.showLoading();
 
       try {
-        await Api.addNote(title, body);
-        titleInput.value = "";
-        bodyInput.value = "";
+        await Api.deleteNote(noteId);
         await NotesUI.renderNotes();
       } catch (error) {
-        console.error("Gagal menambahkan catatan:", error);
+        console.error("Gagal menghapus catatan:", error);
       } finally {
         NotesUI.hideLoading();
-      }
-    }
-  });
-
-document
-  .getElementById("notes-list")
-  .addEventListener("click", async (event) => {
-    if (event.target.classList.contains("delete-btn")) {
-      const noteId = event.target.dataset.id;
-
-      if (confirm("Apakah Anda yakin ingin menghapus catatan ini?")) {
-        NotesUI.showLoading();
-
-        try {
-          await Api.deleteNote(noteId);
-          await NotesUI.renderNotes();
-        } catch (error) {
-          console.error("Gagal menghapus catatan:", error);
-        } finally {
-          NotesUI.hideLoading();
-        }
       }
     }
   });
