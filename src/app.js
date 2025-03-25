@@ -18,6 +18,7 @@ document.body.addEventListener("add-note", async (event) => {
 
     try {
       await Api.addNote(title, body);
+      window.location.reload();
       await NotesUI.renderNotes();
     } catch (error) {
       console.error("Gagal menambahkan catatan:", error);

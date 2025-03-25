@@ -59,6 +59,7 @@ class NoteForm extends HTMLElement {
         event.preventDefault();
         const title = this.shadowRoot.querySelector("#title").value;
         const body = this.shadowRoot.querySelector("#body").value;
+        console.log(title, body);
         this.dispatchEvent(
           new CustomEvent("add-note", {
             detail: { title, body },
