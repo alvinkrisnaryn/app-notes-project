@@ -38,7 +38,10 @@ document
       NotesUI.showLoading();
 
       try {
-        await Api.deleteNote(noteId);
+        console.log(`Deleting note with ID: ${noteId}`);
+        const deleteMessage = await Api.deleteNote(noteId);
+        console.log(deleteMessage);
+
         await NotesUI.renderNotes();
       } catch (error) {
         console.error("Gagal menghapus catatan:", error);
