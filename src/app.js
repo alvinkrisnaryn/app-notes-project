@@ -48,64 +48,7 @@ document
           console.error("Gagal merender catatan:", error);
         }
       });
-
-      // Tangani event hapus catatan dari NoteItem
-      document
-        .getElementById("notes-list")
-        .addEventListener("delete-note", async (event) => {
-          const noteId = event.detail;
-
-          if (noteId) {
-            try {
-              console.log(`Deleting note with ID: ${noteId}`);
-              const deleteMessage = await Api.deleteNote(noteId);
-              console.log(deleteMessage);
-              window.location.reload();
-              await NotesUI.renderNotes();
-            } catch (error) {
-              console.error("Gagal menghapus catatan:", error);
-            } finally {
-              NotesUI.hideLoading();
-            }
-          } else {
-            console.error("ID catatan tidak ditemukan.");
-          }
-        });
-      console.log("DOMContentLoaded event triggered");
-      console.log("Rendering notes...");
-      console.log("Adding event listener for add-note event");
-      console.log("Adding event listener for delete-note event");
-      window.location.reload();
-      document.addEventListener("DOMContentLoaded", async () => {
-        try {
-          console.log("Rendering notes...");
-          window.location.reload();
-          await NotesUI.renderNotes();
-        } catch (error) {
-          console.error("Gagal merender catatan:", error);
-        }
-      });
-
-      document.body.addEventListener("add-note", async (event) => {
-        const { title, body } = event.detail;
-
-        if (title && body) {
-          try {
-            console.log("Adding new note...");
-            NotesUI.showLoading();
-            await Api.addNote(title, body);
-            window.location.reload();
-            await NotesUI.renderNotes();
-          } catch (error) {
-            console.error("Gagal menambahkan catatan:", error);
-          } finally {
-            NotesUI.hideLoading();
-          }
-        } else {
-          console.error("Judul dan isi catatan harus diisi.");
-        }
-      });
-
+      window.location.reload()
       document
         .getElementById("notes-list")
         .addEventListener("delete-note", async (event) => {
