@@ -37,6 +37,7 @@ document
     const noteId = event.detail;
 
     try {
+      NotesUI.showLoading();
       console.log(`Deleting note with ID: ${noteId}`);
       const deleteMessage = await Api.deleteNote(noteId);
       console.log(deleteMessage);
